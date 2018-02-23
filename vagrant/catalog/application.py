@@ -351,15 +351,12 @@ def deleteLocation(location_id):
         return render_template('deleteLocation.html', location=locationToDelete)
 
 # Show a location charity
-
-
 @app.route('/location/<int:location_id>/')
 @app.route('/location/<int:location_id>/charity/')
 def showCharity(location_id):
     location = session.query(Location).filter_by(id=location_id).one()
     creator = getUserInfo(location.user_id)
-    items = session.query(CharityItem).filter_by(
-        location_id=location_id).all()
+    items = session.query(CharityItem).filter_by(location_id=location_id).all()
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publiccharity.html', items=items, location=location, creator=creator)
     else:
@@ -375,8 +372,8 @@ def newCharityItem(location_id):
     if login_session['user_id'] != location.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add charity items to this location. Please create your own location in order to add items.');}</script><body onload='myFunction()'>"
         if request.method == 'POST':
-            newItem = CharityItem(name=request.form['name'], description=request.form['description'], price=request.form[
-                               'price'], course=request.form['course'], location_id=location_id, user_id=location.user_id)
+            newItem = CharityItem(name=request.form['name'], description=request.form['description'], quantity=request.form[
+                               'quantity'], good=request.form['good'], location_id=location_id, user_id=location.user_id)
             session.add(newItem)
             session.commit()
             flash('New Charity %s Item Successfully Created' % (newItem.name))
@@ -385,8 +382,6 @@ def newCharityItem(location_id):
         return render_template('newcharityitem.html', location_id=location_id)
 
 # Edit a charity item
-
-
 @app.route('/location/<int:location_id>/charity/<int:charity_id>/edit', methods=['GET', 'POST'])
 def editCharityItem(location_id, charity_id):
     if 'username' not in login_session:
@@ -400,10 +395,10 @@ def editCharityItem(location_id, charity_id):
             editedItem.name = request.form['name']
         if request.form['description']:
             editedItem.description = request.form['description']
-        if request.form['price']:
-            editedItem.price = request.form['price']
-        if request.form['course']:
-            editedItem.course = request.form['course']
+        if request.form['quantity']:
+            editedItem.quantity = request.form['quantity']
+        if request.form['good']:
+            editedItem.good = request.form['good']
         session.add(editedItem)
         session.commit()
         flash('Charity Item Successfully Edited')
