@@ -38,8 +38,8 @@ class CharityItem(Base):
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     description = Column(String(250))
-    price = Column(String(8))
-    course = Column(String(250))
+    quantity = Column(String(8))
+    good = Column(String(250))
     location_id = Column(Integer, ForeignKey('location.id'))
     location = relationship(Location)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -52,8 +52,8 @@ class CharityItem(Base):
             'name': self.name,
             'description': self.description,
             'id': self.id,
-            'price': self.price,
-            'course': self.course,
+            'quantity': self.quantity,
+            'good': self.good,
         }
 
 
