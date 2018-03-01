@@ -9,7 +9,7 @@
 			<h1>{{ location.name }}
 			<figure class="creator">
 				<img src="{{ url_for('static', filename='blank_user.gif') }}">
-				<figcaption>Charity creator's name goes here</figcaption>
+				<figcaption>{{ creator.name }}</figcaption>
 			</figure>
 			</h1>
 
@@ -39,7 +39,7 @@
 			</a>
 			<a href="{{url_for('newCharityItem', location_id = location.id )}}">
 				<button class="btn btn-default" id="new-charity-item">
-					<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>Add Charity Item
+					<span class="glyphicon glyphicon-gift" aria-hidden="true"></span>Add Charity Item
 				</button>
 			</a>
 						<a href="{{url_for('deleteLocation', location_id = location.id )}}">
@@ -55,9 +55,9 @@
 		<div class="row">
 			<div class="col-md-1"></div>
 			<div class="col-md-3">
-				<h2>Appetizers</h2>
+				<h2>Toiletries</h2>
 					{% for i in items %}
-						{% if i.course == 'Appetizer' %}
+						{% if i.good == 'toiletries' %}
 							<div class="charity-item">
 								<h3>{{i.name}}</h3>
 								<p>{{i.description}}</p>
@@ -69,9 +69,9 @@
 					{% endfor %}
 			</div>
 			<div class="col-md-4">
-				<h2>Entrees</h2>
+				<h2>Non-perishables</h2>
 					{% for i in items %}
-						{% if i.course == 'Entree' %}
+						{% if i.good == 'non-perishables' %}
 						<div class="charity-item">
 							<h3>{{i.name}}</h3>
 							<p>{{i.description}}</p>
@@ -83,9 +83,9 @@
 					{% endfor %}
 			</div>
 			<div class="col-md-3">
-				<h2>Desserts</h2>
+				<h2>Clothing</h2>
 					{% for i in items %}
-						{% if i.course == 'Dessert' %}
+						{% if i.good == 'clothing' %}
 						<div class="charity-item">
 							<h3>{{i.name}}</h3>
 							<p>{{i.description}}</p>
@@ -95,9 +95,45 @@
 						</div>
 						{% endif %}
 					{% endfor %}
-				<h2>Beverages</h2>
+				<h2>Electronics</h2>
 					{% for i in items %}
-						{% if i.course == 'Beverage' %}
+						{% if i.good == 'electronics' %}
+						<div class="charity-item">
+							<h3>{{i.name}}</h3>
+							<p>{{i.description}}</p>
+							<p class="charity-quantity">{{i.quantity}}</p>
+							<a href='{{url_for('editCharityItem', location_id = location.id, charity_id=i.id ) }}'>Edit</a> |
+							<a href='{{url_for('deleteCharityItem', location_id = location.id, charity_id=i.id ) }}'>Delete</a>
+						</div>
+						{% endif %}
+					{% endfor %}
+				<h2>Bedding</h2>
+					{% for i in items %}
+						{% if i.good == 'bedding' %}
+						<div class="charity-item">
+							<h3>{{i.name}}</h3>
+							<p>{{i.description}}</p>
+							<p class="charity-quantity">{{i.quantity}}</p>
+							<a href='{{url_for('editCharityItem', location_id = location.id, charity_id=i.id ) }}'>Edit</a> |
+							<a href='{{url_for('deleteCharityItem', location_id = location.id, charity_id=i.id ) }}'>Delete</a>
+						</div>
+						{% endif %}
+					{% endfor %}
+				<h2>Cleaning</h2>
+					{% for i in items %}
+						{% if i.good == 'cleaning' %}
+						<div class="charity-item">
+							<h3>{{i.name}}</h3>
+							<p>{{i.description}}</p>
+							<p class="charity-quantity">{{i.quantity}}</p>
+							<a href='{{url_for('editCharityItem', location_id = location.id, charity_id=i.id ) }}'>Edit</a> |
+							<a href='{{url_for('deleteCharityItem', location_id = location.id, charity_id=i.id ) }}'>Delete</a>
+						</div>
+						{% endif %}
+					{% endfor %}
+				<h2>Construction</h2>
+					{% for i in items %}
+						{% if i.good == 'construction' %}
 						<div class="charity-item">
 							<h3>{{i.name}}</h3>
 							<p>{{i.description}}</p>

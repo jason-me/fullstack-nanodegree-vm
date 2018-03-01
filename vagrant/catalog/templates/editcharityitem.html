@@ -19,30 +19,44 @@
 					<label for="description">Description:</label>
 					<textarea class="form-control" maxlength="250" rows="3" name="description">{{item.description}}</textarea>
 
-					<label for="price">Price:</label>
+					<label for="quantity">Quantity:</label>
 					<div class="input-group">
-						<div class="input-group-addon">$</div>
-						<input type ="text" maxlength="10" class="form-control" name="price" value="{{item.price}}">
+						<input type ="text" maxlength="10" class="form-control" name="quantity" value="{{item.quantity}}">
 					</div>
-					<label for="course">Course:</label>
+					<label for="good">Good:</label>
 					<div class="radio">
 					  <label>
-					    <input type="radio" name="course" id="course1" value="Appetizer" {% if item.course == 'Appetizer'%}checked{%endif%}>Appetizer
+					    <input type="radio" name="good" id="good1" value="toiletries">Toiletries
 					  </label>
 					</div>
 					<div class="radio">
 					  <label>
-					    <input type="radio" name="course" id="course2" value="Entree" {% if item.course == 'Entree' %}checked{%endif%}>Entree
+					    <input type="radio" name="good" id="good2" value="non-perishables">Non-perishables
 					  </label>
 					</div>
 					<div class="radio">
 					  <label>
-					    <input type="radio" name="course" id="course3" value="Dessert" {% if item.course == 'Dessert'%}checked{%endif%}>Dessert
+					    <input type="radio" name="good" id="good3" value="clothing">Clothing
 					  </label>
 					</div>
 					<div class="radio">
 					  <label>
-					    <input type="radio" name="course" id="course4" value="Beverage" {%if item.course =='Beverage'%}checked{%endif%}>Beverage
+					    <input type="radio" name="good" id="good4" value="electronics">Electronics
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="good" id="good5" value="bedding">Bedding
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="good" id="good6" value="cleaning">Cleaning
+					  </label>
+					</div>
+					<div class="radio">
+					  <label>
+					    <input type="radio" name="good" id="good7" value="construction">Construction
 					  </label>
 					</div>
 					<button type="submit" class="btn btn-default" id="submit" type="submit">

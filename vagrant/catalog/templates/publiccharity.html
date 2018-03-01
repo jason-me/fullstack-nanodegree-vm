@@ -9,7 +9,7 @@
         <div class="col-md-11 col-md-offset-1 padding-none">
             <h1>{{ location.name }}
             <figure class="creator">
-                <img src="{{ creator.picture}}">
+                <img src="{{ url_for('static', filename='blank_user.gif') }}">
                 <figcaption>{{ creator.name }}</figcaption>
             </figure>
             </h1>
@@ -56,6 +56,19 @@
                 <h2>Non-perishables</h2>
                     {% for i in items %}
                         {% if i.good == 'non-perishables' %}
+                        <div class="charity-item">
+                            <h3>{{i.name}}</h3>
+                            <p>Description: {{i.description}}</p>
+                            <p class="charity-quantity">Quantity: {{i.quantity}}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+
+            </div>
+            <div class="col-md-3">
+                <h2>Electronics</h2>
+                    {% for i in items %}
+                        {% if i.good == 'electronics' %}
                         <div class="charity-item">
                             <h3>{{i.name}}</h3>
                             <p>Description: {{i.description}}</p>
