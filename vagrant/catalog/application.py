@@ -297,8 +297,6 @@ def showLocations():
         return render_template('locations.html', locations=locations)
 
 # Create a new location
-
-
 @app.route('/location/new/', methods=['GET', 'POST'])
 def newLocation():
     if 'username' not in login_session:
@@ -314,8 +312,6 @@ def newLocation():
         return render_template('newLocation.html')
 
 # Edit a location
-
-
 @app.route('/location/<int:location_id>/edit/', methods=['GET', 'POST'])
 def editLocation(location_id):
     editedLocation = session.query(
@@ -330,7 +326,7 @@ def editLocation(location_id):
             flash('Location Successfully Edited %s' % editedLocation.name)
             return redirect(url_for('showLocations'))
     else:
-        return render_template('editLocation.html', Location=editedLocation)
+        return render_template('editLocation.html', location=editedLocation)
 
 
 # Delete a location
@@ -371,13 +367,13 @@ def newCharityItem(location_id):
     location = session.query(Location).filter_by(id=location_id).one()
     if login_session['user_id'] != location.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add charity items to this location. Please create your own location in order to add items.');}</script><body onload='myFunction()'>"
-        if request.method == 'POST':
-            newItem = CharityItem(name=request.form['name'], description=request.form['description'], quantity=request.form[
+    if request.method == 'POST':
+        newCharityItem = CharityItem(name=request.form['name'], description=request.form['description'], quantity=request.form[
                                'quantity'], good=request.form['good'], location_id=location_id, user_id=location.user_id)
-            session.add(newItem)
-            session.commit()
-            flash('New Charity %s Item Successfully Created' % (newItem.name))
-            return redirect(url_for('showCharity', location_id=location_id))
+        session.add(newCharityItem)
+        session.commit()
+        flash('New Charity %s Item Successfully Created' % (newCharityItem.name))
+        return redirect(url_for('showCharity', location_id=location_id))
     else:
         return render_template('newcharityitem.html', location_id=location_id)
 
