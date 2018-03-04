@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from flask import Flask, render_template, request, redirect, jsonify
+from flask import url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Location, CharityItem, User
@@ -46,29 +47,22 @@ def fbconnect():
     access_token = request.data
     print "access token received %s " % access_token
 
-
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
-        app_id, app_secret, access_token)
+    url = ('https://graph.facebook.com/oauth/access_token?grant_type='
+           'fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange'
+           '_token=%s') % (app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
 
-
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
-    '''
-        Due to the formatting for the result from the server token exchange we have to
-        split the token first on commas and select the first index which gives us the key : value
-        for the server access token then we split it on colons to pull out the actual token value
-        and replace the remaining quotes with nothing so that it can be used directly in the graph
-        api calls
-    '''
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
+    url = ('https://graph.facebook.com/v2.8/me?access_token=%s&'
+           'fields=name,id,email') % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
@@ -83,7 +77,8 @@ def fbconnect():
     login_session['access_token'] = token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
+    url = ('https://graph.facebook.com/v2.8/me/picture?access_token=%s'
+           '&redirect=0&height=200&width=200') % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -103,7 +98,11 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += (' "style = "width: 300px'
+               'height: 300px'
+               'border-radius: 150px'
+               '-webkit-border-radius: 150px'
+               '-moz-border-radius: 150px"> ')
 
     flash("Now logged in as %s" % login_session['username'])
     return output
@@ -114,7 +113,8 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = ('https://graph.facebook.com/%s/permissions?access_token=%s'
+           '% (facebook_id,access_token)')
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
@@ -172,8 +172,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -206,7 +206,11 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += (' " style = "width: 300px'
+               'height: 300px'
+               'border-radius: 150px'
+               '-webkit-border-radius: 150px'
+               '-moz-border-radius: 150px"> ')
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -260,7 +264,8 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -296,6 +301,7 @@ def showLocations():
     else:
         return render_template('locations.html', locations=locations)
 
+
 # Create a new location
 @app.route('/location/new/', methods=['GET', 'POST'])
 def newLocation():
@@ -311,6 +317,7 @@ def newLocation():
     else:
         return render_template('newLocation.html')
 
+
 # Edit a location
 @app.route('/location/<int:location_id>/edit/', methods=['GET', 'POST'])
 def editLocation(location_id):
@@ -319,7 +326,9 @@ def editLocation(location_id):
     if 'username' not in login_session:
         return redirect('/login')
     if editedLocation.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this location. Please create your own location in order to edit.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized to\
+        delete this location. Please create your own location in order to \
+        delete.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedLocation.name = request.form['name']
@@ -337,14 +346,18 @@ def deleteLocation(location_id):
     if 'username' not in login_session:
         return redirect('/login')
     if locationToDelete.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this location. Please create your own location in order to delete.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized \
+        to delete this location. Please create your own location in order to \
+        delete.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(locationToDelete)
         flash('%s Successfully Deleted' % locationToDelete.name)
         session.commit()
         return redirect(url_for('showLocations', location_id=location_id))
     else:
-        return render_template('deleteLocation.html', location=locationToDelete)
+        return render_template(
+            'deleteLocation.html', location=locationToDelete)
+
 
 # Show a location charity
 @app.route('/location/<int:location_id>/')
@@ -353,10 +366,13 @@ def showCharity(location_id):
     location = session.query(Location).filter_by(id=location_id).one()
     creator = getUserInfo(location.user_id)
     items = session.query(CharityItem).filter_by(location_id=location_id).all()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publiccharity.html', items=items, location=location, creator=creator)
+    if 'username' not in login_session\
+        or creator.id != login_session['user_id']:
+        return render_template('publiccharity.html',
+                               items=items, location=location, creator=creator)
     else:
-        return render_template('charity.html', items=items, location=location, creator=creator)
+        return render_template('charity.html',
+                               items=items, location=location, creator=creator)
 
 
 # Create a new charity item
@@ -366,26 +382,38 @@ def newCharityItem(location_id):
         return redirect('/login')
     location = session.query(Location).filter_by(id=location_id).one()
     if login_session['user_id'] != location.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to add charity items to this location. Please create your own location in order to add items.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized \
+        to add charity items to this location. Please create your own location\
+        in order to add items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
-        newCharityItem = CharityItem(name=request.form['name'], description=request.form['description'], quantity=request.form[
-                               'quantity'], good=request.form['good'], location_id=location_id, user_id=location.user_id)
+        newCharityItem = CharityItem(name=request.form['name'],
+                                     description=request.form['description'],
+                                     quantity=request.form['quantity'],
+                                     good=request.form['good'],
+                                     location_id=location_id,
+                                     user_id=location.user_id)
         session.add(newCharityItem)
         session.commit()
-        flash('New Charity %s Item Successfully Created' % (newCharityItem.name))
+        flash('New Charity %s Item Successfully Created'
+              % (newCharityItem.name))
         return redirect(url_for('showCharity', location_id=location_id))
     else:
         return render_template('newcharityitem.html', location_id=location_id)
 
+
 # Edit a charity item
-@app.route('/location/<int:location_id>/charity/<int:charity_id>/edit', methods=['GET', 'POST'])
+@app.route('/location/<int:location_id>/charity/<int:charity_id>/edit',
+           methods=['GET', 'POST'])
 def editCharityItem(location_id, charity_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(CharityItem).filter_by(id=charity_id).one()
     location = session.query(Location).filter_by(id=location_id).one()
     if login_session['user_id'] != location.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit charity items to this location. Please create your own location in order to edit items.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized \
+        to edit charity items to this location. Please create your own \
+        location in order to edit items.')}; \
+        </script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -400,18 +428,25 @@ def editCharityItem(location_id, charity_id):
         flash('Charity Item Successfully Edited')
         return redirect(url_for('showCharity', location_id=location_id))
     else:
-        return render_template('editcharityitem.html', location_id=location_id, charity_id=charity_id, item=editedItem)
+        return render_template('editcharityitem.html',
+                               location_id=location_id,
+                               charity_id=charity_id,
+                               item=editedItem)
 
 
 # Delete a charity item
-@app.route('/location/<int:location_id>/charity/<int:charity_id>/delete', methods=['GET', 'POST'])
+@app.route('/location/<int:location_id>/charity/<int:charity_id>/delete',
+           methods=['GET', 'POST'])
 def deleteCharityItem(location_id, charity_id):
     if 'username' not in login_session:
         return redirect('/login')
     location = session.query(Location).filter_by(id=location_id).one()
     itemToDelete = session.query(CharityItem).filter_by(id=charity_id).one()
     if login_session['user_id'] != location.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to delete charity items to this location. Please create your own location in order to delete items.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized to\
+         delete charity items to this location. Please create your own \
+         location in order to delete items.');}\
+         </script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
