@@ -14,6 +14,7 @@ This program runs on Python 2.7 and requires a working Vagrant Linux Virtual Ser
         python database_setup.py
         python databse-init.py
         python application.py
+3. Open a browser instance and navigate to localhost:8000
 
 ## Description
 -----------
