@@ -76,11 +76,11 @@ locations = [
           'quantity': '9700',
           'good': 'electronics'},
          {'name': 'T-shirts',
-          'description': '4 Pack Froot of the Loom unisex large white t-shirts',
+          'description': '4 ct Froot of the Loom unisex large white t-shirts',
           'quantity': '30000',
           'good': 'clothing'}]],
     ['Rockport, TX',
-         [{'name': 'Generator',
+        [{'name': 'Generator',
           'description': 'Duromax 4,000 watt gas generator',
           'quantity': '700',
           'good': 'construction'},
@@ -108,11 +108,12 @@ for location in locations:
     session.commit()
 
     for charityitem in location[1]:
-        current_charityitem = CharityItem(name=charityitem['name'],
-                            description=charityitem['description'],
-                            quantity=charityitem['quantity'],
-                            good=charityitem['good'],
-                            location=current_location,
-                            user=current_user)
+        current_charityitem = CharityItem(
+                              name=charityitem['name'],
+                              description=charityitem['description'],
+                              quantity=charityitem['quantity'],
+                              good=charityitem['good'],
+                              location=current_location,
+                              user=current_user)
         session.add(current_charityitem)
         session.commit()
