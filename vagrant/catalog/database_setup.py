@@ -57,7 +57,7 @@ class CharityItem(Base):
         }
 
 
-engine = create_engine('sqlite:///charitablegoodswithusers.db')
+engine = create_engine('postgresql://catalog:GRADER@localhost/catalog')
 
 
 Base.metadata.create_all(engine)

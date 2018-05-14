@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Base, User, Location, CharityItem
 
-engine = create_engine('sqlite:///charitablegoodswithusers.db')
+engine = create_engine('postgresql://catalog:GRADER@localhost/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
